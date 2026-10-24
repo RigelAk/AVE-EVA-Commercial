@@ -435,7 +435,7 @@
           Давайте снимем что-то классное вместе!
         </h2>
         <p class="text-stone-600 mb-8 font-medium">
-          Пришлите бриф или ваш продукт — предложу креативные хуки и структуру в течение 24 часов.
+        
         </p>
 
         <div class="flex flex-wrap items-center justify-center gap-4">
@@ -465,14 +465,26 @@
         ✕
       </button>
 
-      <div class="relative w-full aspect-[9/16] bg-black rounded-2xl overflow-hidden border border-sketch-dark">
+      <!-- Плеер: на десктопе iframe, на мобильных - чистый нативный video тег без интерфейса Google -->
+      <div class="relative w-full aspect-[9/16] bg-black rounded-2xl overflow-hidden border border-sketch-dark flex items-center justify-center">
+        <!-- Десктопный плеер (ПК) -->
         <iframe 
           id="modalIframe" 
           src="" 
-          class="w-full h-full border-0" 
+          class="w-full h-full border-0 hidden" 
           allow="autoplay; encrypted-media" 
           allowfullscreen
         ></iframe>
+
+        <!-- Мобильный нативный плеер (iOS / Android) -->
+        <video 
+          id="modalVideoPlayer" 
+          class="w-full h-full object-cover hidden" 
+          controls 
+          playsinline 
+          webkit-playsinline
+          preload="metadata"
+        ></video>
       </div>
     </div>
   </div>
@@ -480,16 +492,51 @@
   <script>
     const modal = document.getElementById('videoModal');
     const iframe = document.getElementById('modalIframe');
+    const player = document.getElementById('modalVideoPlayer');
+
+    // Проверяем, мобильное ли это устройство или экран
+    function isMobileDevice() {
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth < 768;
+      return isMobileUA || isSmallScreen;
+    }
 
     function openVideoModal(fileId) {
-      iframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
+      if (isMobileDevice()) {
+        // На мобильных: скрываем iframe и запускаем чистый нативный плеер без гугловского UI
+        iframe.classList.add('hidden');
+        iframe.src = '';
+
+        player.classList.remove('hidden');
+        player.src = `https://drive.google.com/uc?export=download&id=${fileId}`;
+        player.load();
+        player.play().catch(() => {});
+      } else {
+        // На ПК: оставляем оригинальный полнофункциональный iframe Google Drive
+        player.classList.add('hidden');
+        player.pause();
+        player.removeAttribute('src');
+
+        iframe.classList.remove('hidden');
+        iframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
+      }
+
       modal.classList.remove('opacity-0', 'pointer-events-none');
       modal.classList.add('opacity-100', 'pointer-events-auto');
       document.body.style.overflow = 'hidden';
     }
 
     function closeVideoModal() {
+      // Сброс iframe
       iframe.src = '';
+      iframe.classList.add('hidden');
+
+      // Остановка и сброс мобильного плеера
+      player.pause();
+      player.removeAttribute('src');
+      player.load();
+      player.classList.add('hidden');
+
       modal.classList.remove('opacity-100', 'pointer-events-auto');
       modal.classList.add('opacity-0', 'pointer-events-none');
       document.body.style.overflow = '';
