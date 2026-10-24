@@ -117,12 +117,19 @@
       animation: subtle-bounce 2.2s infinite ease-in-out;
     }
 
-    /* Маскировка интерфейса Google Drive на мобильных */
+    /* ========================================================
+       УМЕНЬШЕНИЕ КНОПОК И ИНТЕРФЕЙСА GOOGLE DRIVE НА МОБИЛЬНЫХ
+    ======================================================== */
     @media (max-width: 767px) {
-      .mobile-clean-player {
-        width: 100% !important;
-        height: 114% !important;
-        margin-top: -8% !important;
+      .mobile-scaled-player {
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        width: 155% !important;
+        height: 155% !important;
+        transform: translate(-50%, -50%) scale(0.645) !important;
+        transform-origin: center center !important;
+        max-width: none !important;
       }
     }
   </style>
@@ -438,7 +445,6 @@
           Давайте снимем что-то классное вместе!
         </h2>
         <p class="text-stone-600 mb-8 font-medium">
-          Пришлите бриф или ваш продукт — предложу креативные хуки и структуру в течение 24 часов.
         </p>
 
         <div class="flex flex-wrap items-center justify-center gap-4">
@@ -468,12 +474,12 @@
         ✕
       </button>
 
-      <!-- Контейнер с кадрированием: скрывает навязчивый UI Google Drive на мобильных -->
+      <!-- Контейнер: на мобилке уменьшает внутренний UI Google Drive в 1.5 раза -->
       <div class="relative w-full aspect-[9/16] bg-black rounded-2xl overflow-hidden border border-sketch-dark flex items-center justify-center">
         <iframe 
           id="modalIframe" 
           src="" 
-          class="w-full h-full border-0 mobile-clean-player" 
+          class="w-full h-full border-0 mobile-scaled-player" 
           allow="autoplay; encrypted-media" 
           allowfullscreen
         ></iframe>
