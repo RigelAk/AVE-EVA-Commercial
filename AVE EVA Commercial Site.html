@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ева Ахмедова | UGC Creator Portfolio</title>
+
+  <!-- Google Fonts: Outfit (modern sans) + Caveat (sketch notes) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            sketch: ['Caveat', 'cursive'],
+          },
+          colors: {
+            paper: '#FAF7F2',
+            'paper-card': '#FFFDF9',
+            'pastel-pink': '#FCE7F3',
+            'pastel-mint': '#ECFDF5',
+            'pastel-yellow': '#FEF9C3',
+            'pastel-lavender': '#EDE9FE',
+            'sketch-dark': '#292524',
+          },
+          boxShadow: {
+            scrapbook: '3px 4px 0px 0px rgba(41, 37, 36, 0.9)',
+            'scrapbook-sm': '2px 2px 0px 0px rgba(41, 37, 36, 0.9)',
+            'scrapbook-lg': '5px 6px 0px 0px rgba(41, 37, 36, 0.9)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ========================================================
+       КАСТОМНЫЕ МУЛЬТЯШНЫЕ КУРСОРЫ (ЛАДОШКА И УКАЗАТЕЛЬНЫЙ ПАЛЕЦ)
+    ======================================================== */
+    /* Обычный курсор: открытая мультяшная ладонь */
+    html, body {
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34' fill='none'><path d='M10 15V8.5C10 7.12 11.12 6 12.5 6C13.88 6 15 7.12 15 8.5V13M15 13V6.5C15 5.12 16.12 4 17.5 4C18.88 4 20 5.12 20 6.5V13M20 13V8C20 6.62 21.12 5.5 22.5 5.5C23.88 5.5 25 6.62 25 8V16M10 15V13.5C10 12.12 8.88 11 7.5 11C6.12 11 5 12.12 5 13.5V20C5 25.5 9.5 30 15 30H19C24 30 27.5 26 27.5 21V16' stroke='%23292524' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' fill='%23FFFFFF'/><path d='M14 24C16 26 20 26 22 23' stroke='%23292524' stroke-width='2' stroke-linecap='round'/></svg>") 12 12, auto;
+    }
+
+    /* Курсор клика: мультяшная рука с указательным пальцем */
+    a, button, [onclick], [role="button"], input, label {
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34' fill='none'><path d='M11 14.5V4.5C11 3.12 12.12 2 13.5 2C14.88 2 16 3.12 16 4.5V13.5M16 13.5C16.8 12.5 18 12 19.5 12C20.88 12 22 13.12 22 14.5V16M22 16C22.8 15.5 24 15 25 15C26.38 15 27.5 16.12 27.5 17.5V21C27.5 26.5 23.5 31 18 31H15C10 31 6.5 27 6.5 22V17C6.5 15.62 7.62 14.5 9 14.5C10 14.5 10.8 15 11 16V14.5Z' stroke='%23292524' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' fill='%23FFFDF9'/><path d='M11 6V14' stroke='%23292524' stroke-width='2' stroke-linecap='round'/><path d='M14 24C16.5 26.5 20.5 26 22.5 23' stroke='%23292524' stroke-width='2' stroke-linecap='round'/></svg>") 13 3, pointer !important;
+    }
+
+    /* Бумажная текстура в крапинку */
+    .bg-paper-grid {
+      background-color: #FAF7F2;
+      background-image: radial-gradient(#d6cebe 1.1px, transparent 1.1px);
+      background-size: 20px 20px;
+    }
+
+    /* Скотч / Наклейка */
+    .tape-strip {
+      position: absolute;
+      width: 90px;
+      height: 26px;
+      background: rgba(254, 240, 138, 0.78);
+      border-left: 2px dashed rgba(41, 37, 36, 0.35);
+      border-right: 2px dashed rgba(41, 37, 36, 0.35);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      backdrop-filter: blur(2px);
+      z-index: 25;
+    }
+
+    /* Плавная полоса скролла */
+    @keyframes progress-grow {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    #scroll-progress {
+      transform-origin: left center;
+      animation: progress-grow linear;
+      animation-timeline: scroll();
+    }
+
+    /* Scroll-driven анимация появления карточек */
+    @keyframes card-reveal {
+      0% {
+        opacity: 0.3;
+        transform: translateY(30px) scale(0.93);
+      }
+      60%, 100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @supports (animation-timeline: view()) {
+      .scroll-reveal-card {
+        animation: card-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 35%;
+      }
+    }
+
+    .modal-backdrop {
+      backdrop-filter: blur(8px);
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    /* Анимация пульсации для стрелочки тык сюда */
+    @keyframes subtle-bounce {
+      0%, 100% { transform: translate(0, 0) rotate(2deg); }
+      50% { transform: translate(-4px, 4px) rotate(0deg); }
+    }
+    .animate-bounce-arrow {
+      animation: subtle-bounce 2.2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-paper-grid text-sketch-dark antialiased min-h-screen relative selection:bg-pink-200">
+
+  <!-- Crayon Scroll Progress Bar -->
+  <div class="fixed top-0 left-0 right-0 h-2 z-50 pointer-events-none">
+    <div id="scroll-progress" class="h-full w-full bg-gradient-to-r from-pink-400 via-amber-300 to-indigo-400 border-b-2 border-sketch-dark border-dashed"></div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-10 sm:py-16">
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <header class="text-center max-w-3xl mx-auto mb-20 relative">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-pastel-mint border-2 border-sketch-dark rounded-full shadow-scrapbook-sm -rotate-2 hover:rotate-0 transition-transform duration-200 mb-6">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-xs sm:text-sm font-bold tracking-wide uppercase">Открыта к сотрудничеству / Open for collaborations</span>
+      </div>
+
+      <!-- Заголовок с интерактивным именем и стрелочкой -->
+      <div class="relative inline-block mb-6">
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight sm:leading-none">
+          Привет! Я<br class="sm:hidden" />
+          <!-- Кликабельная плашка с переходом в Instagram -->
+          <a 
+            href="https://instagram.com/ave.eva.music" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            title="Открыть Instagram @ave.eva.music"
+            class="relative inline-block px-4 py-1.5 sm:px-6 sm:py-2 mt-2 bg-pastel-pink border-2 sm:border-3 border-sketch-dark rounded-2xl sm:rounded-3xl shadow-scrapbook rotate-1 hover:-rotate-1 hover:scale-105 transition-all duration-200 group"
+          >
+            <span class="text-sketch-dark group-hover:text-pink-600 transition-colors">Ева Ахмедова</span>
+          </a>
+          <br />
+          <span class="text-3xl sm:text-5xl font-bold text-stone-700 block mt-3">UGC Креатор</span>
+        </h1>
+
+        <!-- Стрелочка со скетча с надписью "Тык сюда" -->
+        <div class="animate-bounce-arrow absolute -right-6 sm:-right-44 top-3 sm:-top-2 pointer-events-none select-none flex items-center">
+          <svg class="w-24 sm:w-36 h-20 sm:h-24 overflow-visible" viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Рукописная зелёная стрелка -->
+            <path d="M125 10 C 95 25, 45 42, 12 62" stroke="#22c55e" stroke-width="4.5" stroke-linecap="round" />
+            <!-- Наконечник стрелки -->
+            <path d="M10 63 L 28 50" stroke="#22c55e" stroke-width="4" stroke-linecap="round" />
+            <path d="M10 63 L 26 73" stroke="#22c55e" stroke-width="4" stroke-linecap="round" />
+            <!-- Рукописный текст "Тык сюда" -->
+            <text x="50" y="86" class="font-sketch text-2xl sm:text-3xl fill-green-500 font-bold rotate-6" style="font-family: 'Caveat', cursive;">
+              Тык сюда
+            </text>
+          </svg>
+        </div>
+      </div>
+
+      <p class="text-lg sm:text-xl text-stone-600 font-medium leading-relaxed max-w-2xl mx-auto mb-8">
+        Создаю веселый и вовлекающий видеоконтент для брендов, который цепляет с первых секунд😜
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 font-sketch text-xl sm:text-2xl text-stone-700">
+        <span class="px-3 py-1 bg-pastel-yellow border border-sketch-dark rounded-lg -rotate-1 shadow-sm">⚡ Быстрый продакшн</span>
+        <span class="px-3 py-1 bg-pastel-lavender border border-sketch-dark rounded-lg rotate-2 shadow-sm">📱 Тренды TikTok & Reels</span>
+        <span class="px-3 py-1 bg-pastel-pink border border-sketch-dark rounded-lg -rotate-2 shadow-sm">✨ Сценарии под ключ</span>
+      </div>
+    </header>
+
+    <!-- ==================== PORTFOLIO SECTION ==================== -->
+    <section class="mb-24">
+      <div class="flex flex-col sm:flex-row items-center justify-between mb-12 border-b-2 border-sketch-dark border-dashed pb-6 gap-4">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+            Примеры работ <span class="font-sketch text-indigo-500 text-3xl font-normal">(portfolio)</span>
+          </h2>
+          <p class="text-stone-500 text-sm sm:text-base mt-1">Кликните на обложку любого видео для быстрого просмотра</p>
+        </div>
+        <div class="font-sketch text-xl text-stone-600 rotate-1 bg-white px-3 py-1 border border-sketch-dark rounded-md shadow-scrapbook-sm">
+          7 отобранных кейсов 🎬
+        </div>
+      </div>
+
+      <!-- UGC Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+
+        <!-- 1. 82BOX HELLOWEEN -->
+        <article class="scroll-reveal-card relative group bg-paper-card border-2 border-sketch-dark rounded-3xl p-4 shadow-scrapbook hover:shadow-scrapbook-lg hover:-translate-y-1 transition-all duration-300 -rotate-1">
+          <div class="tape-strip -top-3 left-1/2 -translate-x-1/2 -rotate-2 bg-yellow-100"></div>
+
+          <div 
+            onclick="openVideoModal('1kF2W-SA77K4b3E0OakYvCbBQN6Gia0Ty')" 
+            class="relative aspect-[9/16] bg-stone-900 rounded-2xl overflow-hidden border border-stone-300"
+          >
+            <img 
+              src="https://drive.google.com/thumbnail?id=1kF2W-SA77K4b3E0OakYvCbBQN6Gia0Ty&sz=w800" 
+              alt="82Box Helloween" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+            />
+            <div class="hidden absolute inset-0 bg-stone-800 flex items-center justify-center text-white text-4xl">🎁</div>
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25"></div>
+
+            <span class="absolute top-3 left-3 z-20 px-3.5 py-1.5 bg-pastel-yellow text-sketch-dark text-xs sm:text-sm font-bold rounded-full border border-sketch-dark shadow-sm">
+              82Box Helloween
+            </span>
+
+            <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 rounded-full bg-white/90 text-sketch-dark border-2 border-sketch-dark flex items-center justify-center shadow-scrapbook-sm group-hover:scale-110 group-hover:bg-pastel-yellow transition-all">
+                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. ХЕЛЛОУИН -->
+        <article class="scroll-reveal-card relative group bg-paper-card border-2 border-sketch-dark rounded-3xl p-4 shadow-scrapbook hover:shadow-scrapbook-lg hover:-translate-y-1 transition-all duration-300 rotate-1">
+          <div class="tape-strip -top-3 left-1/2 -translate-x-1/2 rotate-1 bg-emerald-100"></div>
+
+          <div 
+            onclick="openVideoModal('1BdaMxOUTremtx6qhbSS89QuAEK0CQD4H')" 
+            class="relative aspect-[9/16] bg-stone-900 rounded-2xl overflow-hidden border border-stone-300"
+          >
+            <img 
+              src="https://drive.google.com/thumbnail?id=1BdaMxOUTremtx6qhbSS89QuAEK0CQD4H&sz=w800" 
+              alt="Хеллоуин" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+            />
+            <div class="hidden absolute inset-0 bg-stone-800 flex items-center justify-center text-white text-4xl">🎃</div>
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25"></div>
+
+            <span class="absolute top-3 left-3 z-20 px-3.5 py-1.5 bg-pastel-mint text-sketch-dark text-xs sm:text-sm font-bold rounded-full border border-sketch-dark shadow-sm">
+              Хеллоуин
+            </span>
+
+            <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 rounded-full bg-white/90 text-sketch-dark border-2 border-sketch-dark flex items-center justify-center shadow-scrapbook-sm group-hover:scale-110 group-hover:bg-pastel-mint transition-all">
+                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3. РЕКЛАМНЫЙ ДИРИЖАБЛЬ -->
+        <article class="scroll-reveal-card relative group bg-paper-card border-2 border-sketch-dark rounded-3xl p-4 shadow-scrapbook hover:shadow-scrapbook-lg hover:-translate-y-1 transition-all duration-300 -rotate-1">
+          <div class="tape-strip -top-3 left-1/2 -translate-x-1/2 -rotate-1 bg-pink-100"></div>
+          
+          <div 
+            onclick="openVideoModal('1VCQwiBhhBcetJigpkx_C3uTl07Rknvw7')" 
+            class="relative aspect-[9/16] bg-stone-900 rounded-2xl overflow-hidden border border-stone-300"
+          >
+            <img 
+              src="https://drive.google.com/thumbnail?id=1VCQwiBhhBcetJigpkx_C3uTl07Rknvw7&sz=w800" 
+              alt="Рекламный Дирижабль" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+            />
+            <div class="hidden absolute inset-0 bg-stone-800 flex items-center justify-center text-white text-4xl">🎈</div>
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25"></div>
+
+            <span class="absolute top-3 left-3 z-20 px-3.5 py-1.5 bg-pastel-pink text-sketch-dark text-xs sm:text-sm font-bold rounded-full border border-sketch-dark shadow-sm">
+              Рекламный Дирижабль
+            </span>
+
+            <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 rounded-full bg-white/90 text-sketch-dark border-2 border-sketch-dark flex items-center justify-center shadow-scrapbook-sm group-hover:scale-110 group-hover:bg-pastel-pink transition-all">
+                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. ВЫКСА-ФЕСТ -->
+        <article class="scroll-reveal-card relative group bg-paper-card border-2 border-sketch-dark rounded-3xl p-4 shadow-scrapbook hover:shadow-scrapbook-lg hover:-translate-y-1 transition-all duration-300 rotate-2">
+          <div class="tape-strip -top-3 left-1/2 -translate-x-1/2 rotate-2 bg-pink-100"></div>
+
+          <div 
+            onclick="openVideoModal('1Xhx2FvzgIk3OpWEREiLfr3-cAG7r8RXM')" 
+            class="relative aspect-[9/16] bg-stone-900 rounded-2xl overflow-hidden border border-stone-300"
+          >
+            <img 
+              src="https://drive.google.com/thumbnail?id=1Xhx2FvzgIk3OpWEREiLfr3-cAG7r8RXM&sz=w800" 
+              alt="Выкса-Фест" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+            />
+            <div class="hidden absolute inset-0 bg-stone-800 flex items-center justify-center text-white text-4xl">🏛️</div>
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25"></div>
+
+            <span class="absolute top-3 left-3 z-20 px-3.5 py-1.5 bg-pastel-mint text-sketch-dark text-xs sm:text-sm font-bold rounded-full border border-sketch-dark shadow-sm">
+              Выкса-Фест
+            </span>
+
+            <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 rounded-full bg-white/90 text-sketch-dark border-2 border-sketch-dark flex items-center justify-center shadow-scrapbook-sm group-hover:scale-110 group-hover:bg-pastel-mint transition-all">
+                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 5. МЕТЕОРИТ LUGANG -->
+        <article class="scroll-reveal-card relative group bg-paper-card border-2 border-sketch-dark rounded-3xl p-4 shadow-scrapbook hover:shadow-scrapbook-lg hover:-translate-y-1 transition-all duration-300 -rotate-2">
+          <div class="tape-strip -top-3 left-1/2 -translate-x-1/2 -rotate-1 bg-indigo-100"></div>
+
+          <div 
+            onclick="openVideoModal('14xC7SSl3jt_OSQG4JOg127WArGbs51fM')" 
+            class="relative aspect-[9/16] bg-stone-900 rounded-2xl overflow-hidden border border-stone-300"
+          >
+            <img 
+              src="https://drive.google.com/thumbnail?id=14xC7SSl3jt_OSQG4JOg127WArGbs51fM&sz=w800" 
+              alt="Метеорит LuGang" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+            />
+            <div class="hidden absolute inset-0 bg-stone-800 flex items-center justify-center text-white text-4xl">☕</div>
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25"></div>
+
+            <span class="absolute top-3 left-3 z-20 px-3.5 py-1.5 bg-pastel-lavender text-sketch-dark text-xs sm:text-sm font-bold rounded-full border border-sketch-dark shadow-sm">
+              Метеорит LuGang
+            </span>
+
+            <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 rounded-full bg-white/90 text-sketch-dark border-2 border-sketch-dark flex items-center justify-center shadow-scrapbook-sm group-hover:scale-110 group-hover:bg-pastel-lavender transition-all">
+                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 6. АВИАСЕЙЛС -->
+        <article class="scroll-reveal-card relative group bg-paper-card border-2 border-sketch-dark rounded-3xl p-4 shadow-scrapbook hover:shadow-scrapbook-lg hover:-translate-y-1 transition-all duration-300 rotate-1">
+          <div class="tape-strip -top-3 left-1/2 -translate-x-1/2 rotate-3 bg-yellow-100"></div>
+
+          <div 
+            onclick="openVideoModal('1Gb7FF7zj3VqfCIGoLurc3iHxj388nJMX')" 
+            class="relative aspect-[9/16] bg-stone-900 rounded-2xl overflow-hidden border border-stone-300"
+          >
+            <img 
+              src="https://drive.google.com/thumbnail?id=1Gb7FF7zj3VqfCIGoLurc3iHxj388nJMX&sz=w800" 
+              alt="Авиасейлс" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+            />
+            <div class="hidden absolute inset-0 bg-stone-800 flex items-center justify-center text-white text-4xl">✈️</div>
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25"></div>
+
+            <span class="absolute top-3 left-3 z-20 px-3.5 py-1.5 bg-pastel-yellow text-sketch-dark text-xs sm:text-sm font-bold rounded-full border border-sketch-dark shadow-sm">
+              Авиасейлс
+            </span>
+
+            <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 rounded-full bg-white/90 text-sketch-dark border-2 border-sketch-dark flex items-center justify-center shadow-scrapbook-sm group-hover:scale-110 group-hover:bg-pastel-yellow transition-all">
+                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 7. ДЕНЬ РОЖДЕНИЯ -->
+        <article class="scroll-reveal-card relative group bg-paper-card border-2 border-sketch-dark rounded-3xl p-4 shadow-scrapbook hover:shadow-scrapbook-lg hover:-translate-y-1 transition-all duration-300 -rotate-1">
+          <div class="tape-strip -top-3 left-1/2 -translate-x-1/2 -rotate-2 bg-pink-100"></div>
+
+          <div 
+            onclick="openVideoModal('1oGgJN_mUc-ShZEIMiurFLmBUtbyd9KUm')" 
+            class="relative aspect-[9/16] bg-stone-900 rounded-2xl overflow-hidden border border-stone-300"
+          >
+            <img 
+              src="https://drive.google.com/thumbnail?id=1oGgJN_mUc-ShZEIMiurFLmBUtbyd9KUm&sz=w800" 
+              alt="День Рождения" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+            />
+            <div class="hidden absolute inset-0 bg-stone-800 flex items-center justify-center text-white text-4xl">🎂</div>
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25"></div>
+
+            <span class="absolute top-3 left-3 z-20 px-3.5 py-1.5 bg-pastel-pink text-sketch-dark text-xs sm:text-sm font-bold rounded-full border border-sketch-dark shadow-sm">
+              День Рождения
+            </span>
+
+            <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 rounded-full bg-white/90 text-sketch-dark border-2 border-sketch-dark flex items-center justify-center shadow-scrapbook-sm group-hover:scale-110 group-hover:bg-pastel-pink transition-all">
+                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="relative bg-paper-card border-2 border-sketch-dark rounded-3xl p-8 sm:p-12 shadow-scrapbook text-center overflow-hidden">
+      <div class="tape-strip -top-3 left-10 rotate-3"></div>
+      <div class="tape-strip -top-3 right-10 -rotate-6 bg-pink-200"></div>
+
+      <div class="max-w-xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-extrabold mb-3">
+          Давайте снимем что-то классное вместе!
+        </h2>
+        <p class="text-stone-600 mb-8 font-medium">
+          Пришлите бриф или ваш продукт — предложу креативные хуки и структуру в течение 24 часов.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <a href="https://t.me/ave_eva_music" target="_blank" rel="noopener noreferrer" class="px-6 py-3.5 bg-pastel-pink border-2 border-sketch-dark rounded-2xl font-bold shadow-scrapbook hover:shadow-scrapbook-lg transition-all -rotate-1 flex items-center gap-2">
+            Telegram
+          </a>
+          <a href="mailto:ave.eva.business@gmail.com" class="px-6 py-3.5 bg-pastel-yellow border-2 border-sketch-dark rounded-2xl font-bold shadow-scrapbook hover:shadow-scrapbook-lg transition-all rotate-1 flex items-center gap-2">
+            Email
+          </a>
+          <a href="https://instagram.com/ave.eva.music" target="_blank" rel="noopener noreferrer" class="px-6 py-3.5 bg-pastel-lavender border-2 border-sketch-dark rounded-2xl font-bold shadow-scrapbook hover:shadow-scrapbook-lg transition-all -rotate-2 flex items-center gap-2">
+            Instagram
+          </a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ==================== VIDEO MODAL ==================== -->
+  <div id="videoModal" class="modal-backdrop fixed inset-0 bg-stone-900/70 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none" onclick="handleBackdropClick(event)">
+    <div class="relative bg-paper-card border-2 border-sketch-dark rounded-3xl p-3 sm:p-4 shadow-scrapbook-lg max-w-sm w-full mx-auto" onclick="event.stopPropagation()">
+      <button 
+        onclick="closeVideoModal()" 
+        class="absolute -top-3 -right-3 z-30 w-9 h-9 rounded-full bg-pastel-pink border-2 border-sketch-dark flex items-center justify-center font-bold text-sketch-dark shadow-scrapbook-sm hover:scale-110 transition-transform"
+        aria-label="Закрыть"
+      >
+        ✕
+      </button>
+
+      <div class="relative w-full aspect-[9/16] bg-black rounded-2xl overflow-hidden border border-sketch-dark">
+        <iframe 
+          id="modalIframe" 
+          src="" 
+          class="w-full h-full border-0" 
+          allow="autoplay; encrypted-media" 
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('videoModal');
+    const iframe = document.getElementById('modalIframe');
+
+    function openVideoModal(fileId) {
+      iframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100', 'pointer-events-auto');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal() {
+      iframe.src = '';
+      modal.classList.remove('opacity-100', 'pointer-events-auto');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      document.body.style.overflow = '';
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target === modal) closeVideoModal();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeVideoModal();
+    });
+  </script>
+</body>
+</html>
